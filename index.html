@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 5th Monthsary, My Love! 💕</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Canvas Confetti for Heart Particles (Updated to v1.9.3) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+
+    <!-- Custom Styling & Animations -->
+    <style>
+        /* Custom Fonts */
+        .font-cursive { font-family: 'Dancing Script', cursive; }
+        .font-romantic { font-family: 'Sacramento', cursive; }
+        .font-sans-custom { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff5f7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 4px;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.12);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Card Flip Style */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Interactive Particle Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-red-50 text-slate-800 font-sans-custom min-h-screen relative overflow-x-hidden">
+
+    <!-- Background Animated Hearts Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 py-8 space-y-16">
+
+        <!-- HERO SECTION -->
+        <section class="text-center pt-8 pb-4 relative flex flex-col items-center justify-center min-h-[75vh]">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-100/80 border border-pink-200 text-pink-700 text-sm font-semibold mb-6 animate-float shadow-sm">
+                <i data-lucide="sparkles" class="w-4 h-4 text-pink-500"></i>
+                <span>May 9, 2026 – October 9, 2026</span>
+                <i data-lucide="heart" class="w-4 h-4 fill-pink-500 text-pink-500"></i>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-slate-800 mb-4">
+                Happy <span class="font-cursive text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 px-2">5th Monthsary</span>
+            </h1>
+            <p class="text-2xl md:text-3xl font-romantic text-pink-600 mb-8 font-semibold">
+                To My Baby, My Love & My Everything 💕
+            </p>
+
+            <!-- Counter Glass Box -->
+            <div class="w-full max-w-2xl glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white/80 my-4 relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-pink-300/30 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-rose-300/30 rounded-full blur-2xl pointer-events-none"></div>
+
+                <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4 flex items-center justify-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4 text-pink-500"></i>
+                    Time We've Been Loving Each Other
+                </p>
+
+                <div class="grid grid-cols-4 gap-2 md:gap-4 text-center">
+                    <div class="p-3 md:p-4 rounded-2xl bg-white/70 shadow-sm border border-pink-100">
+                        <span id="days" class="block text-2xl md:text-4xl font-extrabold text-pink-600">00</span>
+                        <span class="text-[10px] md:text-xs text-slate-500 uppercase tracking-wider font-semibold">Days</span>
+                    </div>
+                    <div class="p-3 md:p-4 rounded-2xl bg-white/70 shadow-sm border border-pink-100">
+                        <span id="hours" class="block text-2xl md:text-4xl font-extrabold text-pink-600">00</span>
+                        <span class="text-[10px] md:text-xs text-slate-500 uppercase tracking-wider font-semibold">Hours</span>
+                    </div>
+                    <div class="p-3 md:p-4 rounded-2xl bg-white/70 shadow-sm border border-pink-100">
+                        <span id="minutes" class="block text-2xl md:text-4xl font-extrabold text-pink-600">00</span>
+                        <span class="text-[10px] md:text-xs text-slate-500 uppercase tracking-wider font-semibold">Mins</span>
+                    </div>
+                    <div class="p-3 md:p-4 rounded-2xl bg-white/70 shadow-sm border border-pink-100">
+                        <span id="seconds" class="block text-2xl md:text-4xl font-extrabold text-pink-600">00</span>
+                        <span class="text-[10px] md:text-xs text-slate-500 uppercase tracking-wider font-semibold">Secs</span>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-500 italic mt-5">
+                    "Every second spent with you feels like a dream come true."
+                </p>
+            </div>
+
+            <!-- Scroll Down Indicator -->
+            <div class="mt-8 flex flex-col items-center gap-1 opacity-75 hover:opacity-100 transition">
+                <span class="text-xs text-pink-600 font-medium">Scroll down for surprises</span>
+                <i data-lucide="chevron-down" class="w-5 h-5 text-pink-500 animate-bounce"></i>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE ENVELOPE LOVE LETTER SECTION -->
+        <section class="flex flex-col items-center">
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-widest text-pink-600 font-bold">Special Delivery</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800">A Letter For You</h2>
+                <p class="text-slate-500 text-sm mt-1">Tap the envelope to open my heartfelt message</p>
+            </div>
+
+            <div class="w-full max-w-lg cursor-pointer" id="envelope-container">
+                <div class="glass-card rounded-3xl p-6 md:p-8 text-center relative overflow-hidden shadow-2xl transition duration-500 hover:shadow-pink-200/80 border border-pink-200/60">
+                    
+                    <div id="envelope-closed-state" class="py-12 flex flex-col items-center justify-center space-y-4">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-pink-400 to-rose-500 flex items-center justify-center text-white shadow-lg animate-pulse">
+                            <i data-lucide="mail-heart" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-700">To My Dearest Love</h3>
+                        <p class="text-xs text-pink-500 font-semibold uppercase tracking-wider">Tap to open letter 💌</p>
+                    </div>
+
+                    <div id="envelope-open-state" class="hidden text-left space-y-4 animate-fade-in py-2">
+                        <div class="flex justify-between items-center border-b border-pink-100 pb-3">
+                            <span class="font-cursive text-2xl text-pink-600">Dearest Baby,</span>
+                            <span class="text-xs text-slate-400 font-mono">Oct 9, 2026</span>
+                        </div>
+                        
+                        <div class="text-slate-600 text-sm leading-relaxed space-y-3 font-sans-custom">
+                            <p>
+                                Happy 5th Monthsary My Baby! Looking back at our first months together, when our journey first officially began, choosing you was the best decision of my life.
+                            </p>
+                            <p>
+                                You are not just my girlfriend you are my <b>Love</b>, my <b>Baby</b>, and the person I proudly dream of calling my <b>Fiancée</b> one day. These 5 months have been filled with so much laughter, warmth, and beautiful memories that I hold deep in my heart.
+                            </p>
+                            <p>
+                                Thank you for every smile, every hugs, every kisses, every love you gave, and for simply being you. More cravings and loved we will have My Baby. I love you more and more with each passing day, and I can't wait for all the months and years ahead of us!
+                            </p>
+                        </div>
+
+                        <div class="pt-4 border-t border-pink-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-xs text-slate-400">Forever Yours,</p>
+                                <p class="font-cursive text-2xl text-pink-600 font-bold">Sean 💕</p>
+                            </div>
+                            <button id="close-letter-btn" class="px-3 py-1 rounded-full bg-pink-100 text-pink-600 text-xs font-semibold hover:bg-pink-200 transition">
+                                Close Envelope
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- MILESTONE TIMELINE -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <span class="text-xs uppercase tracking-widest text-pink-600 font-bold">Our Journey</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800">5 Months Of Magic</h2>
+                <p class="text-slate-500 text-sm mt-1">Every month with you is a milestone worth celebrating</p>
+            </div>
+
+            <div class="relative border-l-2 border-pink-200 ml-4 md:ml-32 space-y-8 py-4">
+                
+                <!-- Milestone 1 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-pink-500 border-4 border-rose-50 text-white flex items-center justify-center shadow">
+                        <i data-lucide="heart" class="w-4 h-4 fill-white"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-300 transition duration-300">
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">May 9, 2026</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-1">The Start of Forever</h3>
+                        <p class="text-slate-600 text-sm mt-1">The day we officially became us. My life got a million times sweeter!</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-pink-400 border-4 border-rose-50 text-white flex items-center justify-center shadow">
+                        <i data-lucide="smile" class="w-4 h-4"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-300 transition duration-300">
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">June 9, 2026</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-1">1st Monthsary</h3>
+                        <p class="text-slate-600 text-sm mt-1">A full month of endless smiles, all day hanging out, and butterflies.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-pink-400 border-4 border-rose-50 text-white flex items-center justify-center shadow">
+                        <i data-lucide="sun" class="w-4 h-4"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-300 transition duration-300">
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">July 9, 2026</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-1">2nd Monthsary</h3>
+                        <p class="text-slate-600 text-sm mt-1">Always being there for each other no matter what happens.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 4 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-pink-400 border-4 border-rose-50 text-white flex items-center justify-center shadow">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-300 transition duration-300">
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">August 9, 2026</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-1">3rd Monthsary</h3>
+                        <p class="text-slate-600 text-sm mt-1">Creating unforgettable memories and knowing for sure you're the one.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 5 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-pink-400 border-4 border-rose-50 text-white flex items-center justify-center shadow">
+                        <i data-lucide="flame" class="w-4 h-4"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-300 transition duration-300">
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">September 9, 2026</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-1">4th Monthsary</h3>
+                        <p class="text-slate-600 text-sm mt-1">Through every moment, my love and commitment to you only grew stronger.</p>
+                    </div>
+                </div>
+
+                <!-- Milestone 6 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-rose-600 border-4 border-rose-50 text-white flex items-center justify-center shadow-lg animate-pulse">
+                        <i data-lucide="crown" class="w-4 h-4"></i>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 border-2 border-pink-300 shadow-md">
+                        <span class="text-xs font-bold text-pink-600 uppercase tracking-wider">Today • October 9, 2026</span>
+                        <h3 class="text-xl font-bold text-pink-600 mt-1">5th Monthsary! 🎉</h3>
+                        <p class="text-slate-700 text-sm mt-1 font-medium">Happy 5th Monthsary, my love! Thank you for 5 amazing months of happiness.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- REASONS WHY I LOVE YOU FLIP CARDS -->
+        <section class="space-y-6">
+            <div class="text-center">
+                <span class="text-xs uppercase tracking-widest text-pink-600 font-bold">Little Reminders</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800">Why I Love You</h2>
+                <p class="text-slate-500 text-sm mt-1">Tap any card to flip and discover a reason</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                
+                <!-- Card 1 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="smile" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Your Smile</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">Your smile lights up even my darkest days and instantly brings peace to my heart.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="heart-handshake" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Your Kindness</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">The caring and gentle way you treat me makes me feel so cherished and valued.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="laugh" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Our Laughs</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">We can joke around about anything and be our true silly selves together.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Safe Haven</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">In your arms and kisses, I feel completely safe, loved and cherished.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="compass" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Our Future</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">Because I can see a bright, happy, lifetime future with you.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="flip-card h-44 cursor-pointer perspective-1000" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-sm">
+                        <div class="flip-card-front absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="infinity" class="w-8 h-8 text-pink-500 mb-2"></i>
+                            <h4 class="font-bold text-slate-700">Everything</h4>
+                            <span class="text-[10px] text-pink-400 mt-2">Tap to view</span>
+                        </div>
+                        <div class="flip-card-back absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl p-6 flex items-center justify-center text-center text-white">
+                            <p class="text-sm font-medium">I love you simply for being who you are Baby.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PHOTO GALLERY GRID -->
+        <section class="space-y-6">
+            <div class="text-center">
+                <span class="text-xs uppercase tracking-widest text-pink-600 font-bold">Photo Moments</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800">Our Memories</h2>
+                <p class="text-slate-500 text-sm mt-1">Tap an image to enlarge</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                <!-- Gallery Item 1 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('1pic.jpg', 'My Baby 💕')">
+                    <img src="1pic.jpg" alt="Memory 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=Our+Special+Memory'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">My Baby 💕</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('2pic.jpg', 'Together Forever 🌅')">
+                    <img src="2pic.jpg" alt="Memory 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=Romantic+Date'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">Together Forever 🌅</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('3pic.jpg', 'Matcha & Smiles 🍵')">
+                    <img src="3pic.jpg" alt="Memory 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=Cute+Coffee+Date'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">Matcha & Smiles 🍵</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 4 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('4pic.jpg', 'Pure Happiness Smile 😊')">
+                    <img src="4pic.jpg" alt="Memory 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=Laughter+%26+Love'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">Pure Happiness Smile 😊</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 5 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('5pic.jpg', 'Endless Cravings 🍴')">
+                    <img src="5pic.jpg" alt="Memory 5" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=Flowers+For+Baby'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">Endless Cravings 🍴</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 6 -->
+                <div class="group relative overflow-hidden rounded-2xl aspect-square glass-card cursor-pointer shadow-sm hover:shadow-md transition" onclick="openLightbox('6pic.jpg', 'My Future USRN ✨')">
+                    <img src="6pic.jpg" alt="Memory 6" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x600/fda4af/ffffff?text=My+Fiancee'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                        <span class="text-white text-xs font-semibold">My Future USRN ✨</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SURPRISE HEART EXPLOSION BUTTON -->
+        <section class="text-center py-6">
+            <div class="glass-card rounded-3xl p-8 max-w-xl mx-auto shadow-xl border border-pink-200/80">
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Need a Boost of Love?</h3>
+                <p class="text-sm text-slate-500 mb-6">Tap the big heart button below to shower your screen with love!</p>
+                
+                <button id="heart-shower-btn" class="px-8 py-4 bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-pink-400/50 transform active:scale-95 transition duration-200 flex items-center justify-center gap-3 mx-auto">
+                    <i data-lucide="heart" class="w-6 h-6 fill-white"></i>
+                    <span>Tap For Heart Explosion!</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-xs text-slate-400 py-8 space-y-2">
+            <p>Made with all my heart for my Baby, Love & My Everything ❤️</p>
+            <p>Happy 5th Monthsary • October 9, 2026</p>
+        </footer>
+
+    </div>
+
+    <!-- LIGHTBOX MODAL FOR GALLERY -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-2xl w-full max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-white hover:text-pink-300 transition">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="Enlarged view" class="rounded-2xl max-h-[75vh] w-auto object-contain shadow-2xl border border-white/20">
+            <p id="lightbox-caption" class="text-white text-sm mt-3 font-medium text-center"></p>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Live Relationship Timer Logic (Start Date: May 9, 2026)
+        const startDate = new Date('2026-05-09T00:00:00');
+
+        function updateCounter() {
+            const now = new Date();
+            const difference = now - startDate;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+            }
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // 2. Interactive Letter Envelope Toggle
+        const envelopeContainer = document.getElementById('envelope-container');
+        const closedState = document.getElementById('envelope-closed-state');
+        const openState = document.getElementById('envelope-open-state');
+        const closeBtn = document.getElementById('close-letter-btn');
+
+        envelopeContainer.addEventListener('click', function(e) {
+            if (e.target.closest('#close-letter-btn')) return;
+            closedState.classList.add('hidden');
+            openState.classList.remove('hidden');
+            triggerConfettiHearts();
+        });
+
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openState.classList.add('hidden');
+            closedState.classList.remove('hidden');
+        });
+
+        // 3. Heart Shower Confetti Trigger
+        const heartBtn = document.getElementById('heart-shower-btn');
+        
+        function triggerConfettiHearts() {
+            const heartColors = ['#f472b6', '#ec4899', '#f43f5e', '#e11d48', '#fb7185', '#ffffff'];
+
+            // Check if shapeFromText is supported in current confetti bundle
+            if (typeof confetti.shapeFromText === 'function') {
+                try {
+                    const scalar = 2;
+                    const heart = confetti.shapeFromText({ text: '❤️', scalar });
+                    const pinkHeart = confetti.shapeFromText({ text: '💖', scalar });
+
+                    confetti({
+                        shapes: [heart, pinkHeart],
+                        particleCount: 35,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                    return;
+                } catch (e) {
+                    // Fall through to color fallback on any runtime error
+                }
+            }
+
+            // Fallback romantic heart-color confetti burst
+            confetti({
+                particleCount: 60,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: heartColors
+            });
+        }
+
+        heartBtn.addEventListener('click', () => {
+            triggerConfettiHearts();
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    spread: 120,
+                    origin: { y: 0.5 },
+                    colors: ['#f472b6', '#ec4899', '#f43f5e', '#ffffff']
+                });
+            }, 250);
+        });
+
+        // 4. Lightbox Modal Functions
+        function openLightbox(src, caption) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+
+            img.src = src;
+            cap.innerText = caption;
+            lightbox.classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+
+        // 5. Floating Canvas Background Particles
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class FloatingHeart {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 100;
+                this.size = Math.random() * 14 + 8;
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.4 + 0.1;
+                this.swing = Math.random() * 0.02;
+                this.swingAngle = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.swingAngle += this.swing;
+                this.x += Math.sin(this.swingAngle) * 0.5;
+
+                if (this.y < -20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = '#f472b6';
+                ctx.font = `${this.size}px sans-serif`;
+                ctx.fillText('❤️', this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        const hearts = Array.from({ length: 20 }, () => new FloatingHeart());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            hearts.forEach(h => {
+                h.update();
+                h.draw();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+        
+        window.onload = function() {
+            animateCanvas();
+        };
+    </script>
+</body>
+</html>
